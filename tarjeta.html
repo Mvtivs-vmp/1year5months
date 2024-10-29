@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje para Ro bebita</title>
+    <style>
+        /* Configuración de fuentes y colores */
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f0e1;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Fondo nostálgico */
+        .container {
+            background: url('img/fondo-nostalgico.jpg') no-repeat center center fixed;
+            background-size: cover;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            color: #4d4d4d;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #800020;
+            margin-bottom: 20px;
+        }
+
+        .message-box {
+            font-family: 'Dancing Script', cursive;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            resize: none;
+        }
+
+        .record-button, .stop-button {
+            background-color: #800020;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .record-button:hover, .stop-button:hover {
+            background-color: #a00030;
+        }
+
+        .audio-output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Para Mi Amada Ro</h1>
+        <p>Se que hemos pasado por momentos dificiles y muchas dificultades que poco a poco lograban hacernos rendir del uno al otro, me alegra mucho que hayamos sido mas fuertes que esos malos pensamientos
+        y pudimos darnos cuenta que podíamos estar juntos a pesar de todo, que somos un equipo y que nunca nos vamos a rendir asi tengamos que poner en riesgo la felicidad del otro. Perdoname por todas tus lágrimas derramadas, algunas por mi culpa y otras por esos pensamientos que carcomían tus sentimientos, sabes que estoy entregado a ti y a todo lo bueno que vayas a hacer el resto de tu vida, si es posible conmigo, que créeme que lo anhelo mucho, de tan solo imaginarlo me siento cómodo 
+        .</p>
+
+        <p>Cuando te sientas que no puedes o necesitas una motivación, escucha esto y verás porque nuestro amor traspasa mas allá de los límites</p>
+        <audio controls>
+            <source src="img/uno.ogg" type="audio/mpeg">
+        </audio>
+        <audio controls>
+            <source src="img/WhatsApp Ptt 2024-10-28 at 10.40.51 PM.ogg" type="audio/mpeg">
+            Tu navegador no soporta la reproducción de audio.
+        </audio>
+        <audio controls>
+            <source src="img/WhatsApp Ptt 2024-10-28 at 10.42.16 PM.ogg" type="audio/mpeg">
+            Tu navegador no soporta la reproducción de audio.
+        </audio>        
+
+        <p>Escribe aquí tus pensamientos o sentimientos cuando lo necesites, no podré leerlos pero ten por seguro que sanarán:</p>
+        
+        <!-- Caja de mensaje de texto -->
+        <textarea class="message-box" placeholder="Escribe algo..."></textarea>
+
+        <!-- Sección para grabar mensaje de voz -->
+        <p>O déjame un mensaje de voz:</p>
+        <button class="record-button" onclick="startRecording()">Grabar</button>
+        <button class="stop-button" onclick="stopRecording()" disabled>Detener</button>
+        
+        <!-- Audio grabado -->
+        <div class="audio-output" id="audioOutput"></div>
+    </div>
+
+    <script>
+        // Variables de grabación
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                audioChunks = [];
+
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    audioChunks.push(event.data);
+                });
+
+                mediaRecorder.addEventListener("stop", () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = document.createElement("audio");
+                    audio.controls = true;
+                    audio.src = audioUrl;
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = audioUrl;
+                    downloadLink.download = "nota-de-voz.wav";
+                    downloadLink.textContent = "Descargar Nota de Voz";
+
+                    document.getElementById("audioOutput").innerHTML = "";
+                    document.getElementById("audioOutput").appendChild(audio);
+                    document.getElementById("audioOutput").appendChild(downloadLink);
+                });
+
+                document.querySelector(".record-button").disabled = true;
+                document.querySelector(".stop-button").disabled = false;
+            })
+            .catch(error => console.error("Error al acceder al micrófono:", error));
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            document.querySelector(".record-button").disabled = false;
+            document.querySelector(".stop-button").disabled = true;
+        }
+    </script>
+</body>
+</html>
